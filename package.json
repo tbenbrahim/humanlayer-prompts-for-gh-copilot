@@ -1,0 +1,49 @@
+{
+  "name": "humanlater-extension",
+  "displayName": "Humanlater Copilot Bundle",
+  "description": "Install Humanlayer-derived GitHub Copilot prompts and companion agents into a workspace.",
+  "version": "2026.4.0",
+  "publisher": "tony-benbrahim",
+  "author": {
+    "name": "Tony BenBrahim",
+    "email": "tony.benbrahim+github@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "humanlayer",
+    "copilot",
+    "github-copilot",
+    "skills",
+    "prompts",
+    "agents",
+    "customization",
+    "developer-workflows"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "humanlater.installWorkspaceBundle",
+        "title": "Install Humanlater Copilot Bundle",
+        "category": "Humanlater"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "@types/vscode": "^1.100.0",
+    "typescript": "^5.8.3"
+  }
+}
