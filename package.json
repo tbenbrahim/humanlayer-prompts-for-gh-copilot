@@ -2,7 +2,7 @@
   "name": "humanlayer-extension",
   "displayName": "Humanlayer Copilot Bundle",
   "description": "Install humanlayer-derived GitHub Copilot prompts and companion agents into a workspace.",
-  "version": "2026.4.4",
+  "version": "2026.4.5",
   "publisher": "tony-benbrahim",
   "author": {
     "name": "Tony BenBrahim",
