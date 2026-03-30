@@ -1,0 +1,103 @@
+version: 2.1
+
+jobs:
+  build_vsix:
+    docker:
+      - image: cimg/node:22.14
+    working_directory: ~/project
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - npm-v1-{{ checksum "package-lock.json" }}
+            - npm-v1-
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: npm-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+      - run:
+          name: Build extension
+          command: npm run compile
+      - run:
+          name: Package VSIX
+          command: |
+            mkdir -p extension-setup/dist
+            VERSION=$(node -p "require('./package.json').version")
+            NAME=$(node -p "require('./package.json').name")
+            npx @vscode/vsce package --out "extension-setup/dist/${NAME}-${VERSION}.vsix"
+      - store_artifacts:
+          path: extension-setup/dist
+      - persist_to_workspace:
+          root: .
+          paths:
+            - extension-setup/dist
+
+  release_vsix:
+    docker:
+      - image: cimg/node:22.14
+    working_directory: ~/project
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Ensure gh is available
+          command: |
+            if command -v gh >/dev/null 2>&1; then
+              gh --version
+              exit 0
+            fi
+            type -p curl >/dev/null || sudo apt-get update
+            sudo apt-get install -y curl
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+              | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+            sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+              | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+            sudo apt-get update
+            sudo apt-get install -y gh
+      - run:
+          name: Publish GitHub release asset
+          command: |
+            if [ -z "$GITHUB_TOKEN" ]; then
+              echo "GITHUB_TOKEN must be set in CircleCI project settings or context."
+              exit 1
+            fi
+
+            VERSION=$(node -p "require('./package.json').version")
+            NAME=$(node -p "require('./package.json').name")
+            VSIX_PATH="extension-setup/dist/${NAME}-${VERSION}.vsix"
+
+            if [ ! -f "$VSIX_PATH" ]; then
+              echo "Expected VSIX not found at $VSIX_PATH"
+              exit 1
+            fi
+
+            export GH_TOKEN="$GITHUB_TOKEN"
+
+            if gh release view "$CIRCLE_TAG" >/dev/null 2>&1; then
+              gh release upload "$CIRCLE_TAG" "$VSIX_PATH" --clobber
+            else
+              gh release create "$CIRCLE_TAG" "$VSIX_PATH" \
+                --title "$CIRCLE_TAG" \
+                --generate-notes
+            fi
+
+workflows:
+  build_and_release:
+    jobs:
+      - build_vsix:
+          filters:
+            tags:
+              only: /.*/
+      - release_vsix:
+          requires:
+            - build_vsix
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/

@@ -8,6 +8,10 @@
     "name": "Tony BenBrahim",
     "email": "tony.benbrahim+github@gmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tbenbrahim/humanlayer-prompts-for-gh-copilot.git"
+  },
   "license": "Apache-2.0",
   "engines": {
     "vscode": "^1.100.0"
