@@ -1,8 +1,8 @@
 {
-  "name": "humanlater-extension",
+  "name": "humanlayer-extension",
   "displayName": "Humanlayer Copilot Bundle",
-  "description": "Install Humanlayer-derived GitHub Copilot prompts and companion agents into a workspace.",
-  "version": "2026.4.0",
+  "description": "Install humanlayer-derived GitHub Copilot prompts and companion agents into a workspace.",
+  "version": "2026.4.4",
   "publisher": "tony-benbrahim",
   "author": {
     "name": "Tony BenBrahim",
@@ -30,13 +30,21 @@
     "customization",
     "developer-workflows"
   ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "humanlater.installWorkspaceBundle",
-        "title": "Install Humanlater Copilot Bundle",
-        "category": "Humanlater"
+        "command": "humanlayer.installWorkspaceBundle",
+        "title": "Install humanlayer Copilot Bundle",
+        "category": "Chat"
+      },
+      {
+        "command": "humanlayer.uninstallWorkspaceBundle",
+        "title": "Uninstall humanlayer Copilot Bundle",
+        "category": "Chat"
       }
     ]
   },
