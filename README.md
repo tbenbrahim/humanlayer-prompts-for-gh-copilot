@@ -47,6 +47,14 @@ The bundle covers:
 - Several prompts rely on companion agents from `bundle/agents` for focused research work.
 - The prompt content is adapted from the Humanlayer `.claude` workflow for GitHub Copilot usage.
 
+## Installation Instructions
+
+1. Install the extension in VS Code.
+2. Open the repository you want to configure.
+3. Run `Chat: Install humanlayer Copilot Bundle` from the Command Palette to copy the bundled prompts, agents, and skills into that repository's `.github` folder.
+4. Repeat the install command in each repository that should receive the bundle.
+5. If you want to remove the copied files from a repository later, run `Chat: Uninstall humanlayer Copilot Bundle` from the Command Palette in that repository.
+
 ## More Information
 
 - [No Vibes Allowed: Solving Hard Problems in Complex Codebases – Dex Horthy, HumanLayer](https://www.youtube.com/watch?v=rmvDxxNubIg)
